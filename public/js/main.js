@@ -1,36 +1,30 @@
-import SpriteSheet from './SpriteSheet.js'
-import { loadImage } from './Loaders.js'
+import SpriteSheet from './SpriteSheet.js';
+import { loadImage, loadLevel } from './loaders.js';
 
-const canvas = document.getElementById('screen')
-const context = canvas.getContext('2d')
+const canvas = document.getElementById('screen');
+const context = canvas.getContext('2d');
 
-context.fillRect(0, 0, 50, 50)
-
-loadImage('/img/tiles.png').then(image => {
-  const sprites = new SpriteSheet(image, 16, 16) // tile size 16
-  sprites.define('ground', 0, 0)
-  sprites.define('sky', 3, 23)
-
-  for (let x = 0; x < 25; ++x) {
-    for (let y = 0; y < 14; ++y) {
-      sprites.drawTile('sky', context, x, y)
+function drawBackground(background, context, sprites) {
+  background.ranges.forEach(([x1, x2, y1, y2]) => {
+    for (let x = x1; x < x2; ++x) {
+      for (let y = y1; y < y2; ++y) {
+        sprites.drawTile(background.tile, context, x, y);
+      }
     }
-  }
-
-  for (let x = 0; x < 25; ++x) {
-    for (let y = 12; y < 14; ++y) {
-      sprites.drawTile('ground', context, x, y)
-    }
-  }
+  });
+}
 
 
+loadImage('/img/tiles.png')
+  .then(image => {
+    const sprites = new SpriteSheet(image);
+    sprites.define('ground', 0, 0);
+    sprites.define('sky', 3, 23);
 
-
-
-
-  // context.drawImage(image,
-  //   0, 0, 16, 16, // subset you want
-  //   0, 0, // where to draw
-  //   16, 16 // size
-  // )
-})
+    loadLevel('1-1')
+      .then(level => {
+        level.backgrounds.forEach(bg => {
+          drawBackground(bg, context, sprites);
+        });
+      });
+  });
