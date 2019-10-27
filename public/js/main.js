@@ -30,6 +30,12 @@ function createBackgroundLayer(backgrounds, sprites) {
   }
 }
 
+function createSpriteLayer(sprite, pos) {
+  return function drawSpriteLayer(context) {
+    sprite.draw('idle', context, pos.x, pos.y)
+  }
+}
+
 function drawBackground(background, context, sprites) {
   background.ranges.forEach(([x1, x2, y1, y2]) => {
     for (let x = x1; x < x2; ++x) {
@@ -56,9 +62,13 @@ Promise.all([
     x: 64,
     y: 64
   }
+
+  const spriteLayer = createSpriteLayer(MarioSprite, pos)
+  comp.layers.push(spriteLayer)
+
+
   function update() {
     comp.draw(context)
-    MarioSprite.draw('idle', context, pos.x, pos.y)
     pos.x += 2;
     pos.y += 2;
     requestAnimationFrame(update)// built in function that takes a function
