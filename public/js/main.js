@@ -13,18 +13,25 @@ function drawBackground(background, context, sprites) {
     }
   });
 }
+function loadBackgroundSprites() {
+  return loadImage('/img/tiles.png')
+    .then(image => {
+      const sprites = new SpriteSheet(image);
+      sprites.define('ground', 0, 0);
+      sprites.define('sky', 3, 23);
+      return sprites
+    })
+}
+
+Promise.all([
+  loadBackgroundSprites(),
+  loadLevel('1-1')
+]).then(([sprites, level]) => {
+
+  level.backgrounds.forEach(background => {
+    drawBackground(background, context, sprites);
+  })
+})
 
 
-loadImage('/img/tiles.png')
-  .then(image => {
-    const sprites = new SpriteSheet(image);
-    sprites.define('ground', 0, 0);
-    sprites.define('sky', 3, 23);
 
-    loadLevel('1-1')
-      .then(level => {
-        level.backgrounds.forEach(bg => {
-          drawBackground(bg, context, sprites);
-        });
-      });
-  });
