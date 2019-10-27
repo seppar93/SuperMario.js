@@ -1,4 +1,4 @@
-import SpriteSheet from './SpriteSheet.js';
+// import SpriteSheet from './SpriteSheet.js';
 import { loadLevel } from './loaders.js';
 import { loadMarioSprite, loadBackgroundSprites } from './Sprites.js'
 
@@ -21,11 +21,26 @@ Promise.all([
   loadBackgroundSprites(),
   loadLevel('1-1')
 ]).then(([MarioSprite, sprites, level]) => {
+  const backgroundBuffer = document.createElement('canvas')
+  backgroundBuffer.width = 256;
+  backgroundBuffer.height = 240;
+
 
   level.backgrounds.forEach(background => {
-    drawBackground(background, context, sprites);
+    drawBackground(background, backgroundBuffer.getContext('2d'), sprites);
   })
-  MarioSprite.draw('idle', context, 64, 64)
+  const pos = {
+    x: 64,
+    y: 64
+  }
+  function update() {
+    context.drawImage(backgroundBuffer, 0, 0)
+    MarioSprite.draw('idle', context, pos.x, pos.y)
+    pos.x += 2;
+    pos.y += 2;
+    requestAnimationFrame(update)// built in function that takes a function
+  }
+  update()
 })
 
 
