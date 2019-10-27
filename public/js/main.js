@@ -5,6 +5,31 @@ import { loadMarioSprite, loadBackgroundSprites } from './Sprites.js'
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
 
+class Compositor {
+  constructor() {
+    this.layers = []
+  }
+
+  draw(context) {
+    this.layers.forEach(layer => {
+      layer(context) // layer is a function that draws on the context
+    })
+  }
+}
+
+function createBackgroundLayer(backgrounds, sprites) {
+  const buffer = document.createElement('canvas')
+  buffer.width = 256;
+  buffer.height = 240;
+  backgrounds.forEach(background => {
+    drawBackground(background, buffer.getContext('2d'), sprites);
+  })
+  return function drawBackgroundLayer(context) {
+    context.drawImage(buffer, 0, 0)
+
+  }
+}
+
 function drawBackground(background, context, sprites) {
   background.ranges.forEach(([x1, x2, y1, y2]) => {
     for (let x = x1; x < x2; ++x) {
@@ -21,20 +46,18 @@ Promise.all([
   loadBackgroundSprites(),
   loadLevel('1-1')
 ]).then(([MarioSprite, sprites, level]) => {
-  const backgroundBuffer = document.createElement('canvas')
-  backgroundBuffer.width = 256;
-  backgroundBuffer.height = 240;
+  const comp = new Compositor
+  const backgroundLayer = createBackgroundLayer(level.backgrounds, sprites)
+  comp.layers.push(backgroundLayer)
 
 
-  level.backgrounds.forEach(background => {
-    drawBackground(background, backgroundBuffer.getContext('2d'), sprites);
-  })
+
   const pos = {
     x: 64,
     y: 64
   }
   function update() {
-    context.drawImage(backgroundBuffer, 0, 0)
+    comp.draw(context)
     MarioSprite.draw('idle', context, pos.x, pos.y)
     pos.x += 2;
     pos.y += 2;
