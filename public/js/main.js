@@ -29,10 +29,15 @@ Promise.all([
   comp.layers.push(backgroundLayer)
 
 
-
+  const gravity = 0.5
   const pos = {
-    x: 0,
-    y: 0
+    x: 64,
+    y: 180
+  }
+
+  const vel = {
+    x: 2,
+    y: -10
   }
 
   const spriteLayer = createSpriteLayer(MarioSprite, pos)
@@ -41,8 +46,9 @@ Promise.all([
 
   function update() {
     comp.draw(context)
-    pos.x += 2;
-    pos.y += 2;
+    pos.x += vel.x;
+    pos.y += vel.y;
+    vel.y += gravity
     requestAnimationFrame(update)// built in function that takes a function
   }
   update()
