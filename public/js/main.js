@@ -1,8 +1,10 @@
 import Compositor from './Compositor.js'
 import Entity from './Entity.js'
 import { createBackgroundLayer } from './Layers.js'
+import { createMario } from './entities.js'
+
 import { loadLevel } from './loaders.js';
-import { loadMarioSprite, loadBackgroundSprites } from './Sprites.js'
+import { loadBackgroundSprites } from './Sprites.js'
 
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
@@ -20,10 +22,10 @@ function createSpriteLayer(entity) {
 
 
 Promise.all([
-  loadMarioSprite(),
+  createMario(),
   loadBackgroundSprites(),
   loadLevel('1-1')
-]).then(([MarioSprite, backgroundSprites, level]) => {
+]).then(([mario, backgroundSprites, level]) => {
   const comp = new Compositor
   const backgroundLayer = createBackgroundLayer(level.backgrounds, backgroundSprites)
   comp.layers.push(backgroundLayer)
@@ -31,14 +33,7 @@ Promise.all([
 
   const gravity = 0.5
 
-  const mario = new Entity()
-  mario.pos.set(64, 180)
-  mario.vel.set(2, -10)
 
-  mario.draw = function drawMario(context) {
-    MarioSprite.draw('idle', context, this.pos.x, this.pos.y)
-
-  }
 
   mario.update = function updateMario() {
     // ^^ attaching a function to class give you ac cess to this
