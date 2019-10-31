@@ -7,12 +7,30 @@ const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
 
 
-function createSpriteLayer(sprite, pos) {
+function createSpriteLayer(entity) {
   return function drawSpriteLayer(context) {
     for (let i = 0; i < 20; ++i) {
-      sprite.draw('idle', context, pos.x + i * 16, pos.y)
+      entity.draw(context)
 
     }
+  }
+}
+
+class Vec2 {
+  constructor(x, y) {
+    this.set(x, y)
+  }
+  set(x, y) {
+    this.x = x
+    this.y = y
+
+  }
+}
+
+class Entity {
+  constructor() {
+    this.pos = new Vec2(0, 0)
+    this.vel = new Vec2(0, 0)
   }
 }
 
@@ -30,25 +48,35 @@ Promise.all([
 
 
   const gravity = 0.5
-  const pos = {
-    x: 64,
-    y: 180
+
+  const mario = new Entity()
+  mario.pos.set(64, 180)
+  mario.vel.set(2, -10)
+
+  mario.draw = function drawMario(context) {
+    MarioSprite.draw('idle', context, this.pos.x, this.pos.y)
+
   }
 
-  const vel = {
-    x: 2,
-    y: -10
+  mario.update = function updateMario() {
+    // ^^ attaching a function to class give you ac cess to this
+    this.pos.x += this.vel.x;
+    this.pos.y += this.vel.y;
+
   }
 
-  const spriteLayer = createSpriteLayer(MarioSprite, pos)
+
+
+
+
+  const spriteLayer = createSpriteLayer(mario)
   comp.layers.push(spriteLayer)
 
 
   function update() {
     comp.draw(context)
-    pos.x += vel.x;
-    pos.y += vel.y;
-    vel.y += gravity
+    mario.update()
+    mario.vel.y += gravity
     requestAnimationFrame(update)// built in function that takes a function
   }
   update()
