@@ -11,6 +11,9 @@ export default class Jump extends Trait {
     this.engageTime = this.duration
     // ^ first the duration is set to 0.5
   }
+  cancel() {
+    this.engageTime = 0
+  }
 
 
   update(entity, deltaTime) {
@@ -18,6 +21,8 @@ export default class Jump extends Trait {
       // the if statement starts to run 
       entity.vel.y = this.velocity
       // velocity increases 
+
+      // once cancel runs gravity increases
       this.engageTime -= deltaTime
       // decrement engage time 
     }
