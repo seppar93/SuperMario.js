@@ -4,13 +4,10 @@ export default class Timer {
     let lastTime = 0;
 
     this.updateProxy = (time) => {
-      // arrow function are not private 
-      // deltaTime = (time - lastTime) / 1000
+      // arrow functions are not private
       accumulatedTime += (time - lastTime) / 1000;
 
       while (accumulatedTime > deltaTime) {
-        // ^^decoupled internal frame rate from rendering frame rate 
-
         this.update(deltaTime);
         accumulatedTime -= deltaTime;
       }
