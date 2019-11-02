@@ -4,6 +4,14 @@ import { loadLevel } from './loaders.js';
 import { createMario } from './entities.js';
 import { loadBackgroundSprites } from './sprites.js';
 import { createBackgroundLayer, createSpriteLayer } from './layers.js';
+import keyboard from './KeyboardState.js'
+
+const input = new Keyboard();
+
+input.addMapping(32, keyState => {
+  console.log('bust down thotiana!');
+
+})
 
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
