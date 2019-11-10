@@ -6,4 +6,10 @@ export default class Level {
     this.entities = new Set()
     // set only stores unique objects
   }
+
+  update(deltaTime) {
+    this.entities.forEach(entity => {
+      entity.update(deltaTime)
+    });
+  }
 }
