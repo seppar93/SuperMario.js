@@ -7,10 +7,10 @@
 export class Matrix {
   // Instantiate on the level
   constructor() {
-    this.gird = []
+    this.grid = []
   }
   get(x, y) {
-    const col = this.gird[x]
+    const col = this.grid[x]
     if (col) {
       return col[y]
     }
@@ -18,10 +18,10 @@ export class Matrix {
   }
 
   set(x, y, value) {
-    if (!this.gird[x]) {
-      this.gird[x] = []
+    if (!this.grid[x]) {
+      this.grid[x] = []
     }
-    this.gird[x][y] = value
+    this.grid[x][y] = value
   }
 
 }
